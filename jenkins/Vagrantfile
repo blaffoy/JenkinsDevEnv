@@ -1,0 +1,44 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure(2) do |config|
+  config.vm.box = "centos/7"
+  config.vm.synced_folder ".", "/home/vagrant/sync", type: "virtualbox"
+  config.vm.network "forwarded_port", guest: 8080, host: 8080
+  config.vm.network "forwarded_port", guest: 8081, host: 8081
+
+  config.vm.provider :virtualbox do |v|
+      v.name = "jenkins"
+  end
+
+  config.vm.define :jenkins do |jenkins|
+  end
+
+  $ansible_script = <<SCRIPT
+    ANSIBLE_DIR="/etc/ansible"
+    ANSIBLE_HOSTFILE="$ANSIBLE_DIR/hosts"
+    VAGRANT_SYNC="/home/vagrant/sync"
+    if [ ! -f $ANSIBLE_HOSTFILE ]; then
+        yum install -y epel-release
+        yum install -y ansible
+
+        # Create a simple inventory file for localhost:
+		mkdir -p $ANSIBLE_DIR
+		echo "[local]" > $ANSIBLE_HOSTFILE
+		echo "jenkins ansible_connection=local" >> $ANSIBLE_HOSTFILE
+    fi
+
+    export PYTHONUNBUFFERED=1
+
+    # ensure git is installed before fetching rest of requirements
+    ansible-galaxy install geerlingguy.git
+    echo -e "---\n- hosts: jenkins\n  roles:\n    - geerlingguy.git" > tmpgitinstall.yml
+    ansible-playbook tmpgitinstall.yml
+    rm tmpgitinstall.yml
+
+    ansible-galaxy install -r $VAGRANT_SYNC/provisioning/requirements.yml
+    ansible-playbook $VAGRANT_SYNC/provisioning/playbook.yml
+SCRIPT
+
+  config.vm.provision "shell", inline: $ansible_script
+end

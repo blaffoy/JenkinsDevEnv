@@ -1,0 +1,10 @@
+---
+- synchronize:
+    src=/home/vagrant/sync/plugins/
+    dest=/var/lib/jenkins/plugins/
+
+- file:
+    path=/var/lib/jenkins/plugins/
+    recurse=yes
+    owner=jenkins
+    group=jenkins

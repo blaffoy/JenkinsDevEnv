@@ -1,0 +1,8 @@
+---
+- src: geerlingguy.git
+- src: geerlingguy.firewall
+- src: geerlingguy.ntp
+- src: geerlingguy.java
+- src: geerlingguy.jenkins
+- src: geerlingguy.nodejs
+- src: git+https://git.openstack.org/openstack/ansible-role-jenkins-job-builder

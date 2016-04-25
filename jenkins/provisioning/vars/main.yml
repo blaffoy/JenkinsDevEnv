@@ -1,0 +1,125 @@
+---
+ansible_ssh_user: root
+
+ntp_timezone: Europe/London
+
+firewall_allowed_tcp_ports:
+  - "22"
+  - "80"
+  - "443"
+  - "8080"
+
+nodejs_version: "4.x"
+nodejs_install_npm_user: "{{ ansible_ssh_user }}"
+nodejs_forever: true
+nodejs_npm_global_packages:
+  - name: gulp
+  - name: tsd
+  - name: npm-shrinkwrap
+  - name: mocha
+
+jenkins_hostname: "localhost"
+jenkins_http_port: "8080"
+jenkins_plugins:
+  - analysis-core
+  - android-lint
+  - ansicolor
+  - ant
+  - antisamy-markup-formatter
+  - anything-goes-formatter
+  - build-flow-plugin
+  - build-name-setter
+  - build-timeout
+  - build-user-vars-plugin
+  - checkstyle
+  - cobertura
+  - compact-columns
+  - copyartifact
+  - cors-filter
+  - credentials
+  - cvs
+  - downstream-ext
+  - dry
+  - email-ext
+  - emma
+  - envinject
+  - environment-script
+  - extensible-choice-parameter
+  - external-monitor-job
+  - external-scheduler
+  - findbugs
+  - flashlog-plugin
+  - flexible-publish
+  - git
+  - git-client
+  - git-notes
+  - git-parameter
+  - greenballs
+  - groovy
+  - hipchat
+  - javadoc
+  - jira
+  - job-dsl
+  - jquery
+  - junit
+  - ldap
+  - leastload
+  - mailer
+  - mapdb-api
+  - matrix-auth
+  - matrix-project
+  - maven-plugin
+  - monitoring
+  - multiple-scms
+  - next-build-number
+  - nodejs
+  - nodelabelparameter
+  - notification
+  - pam-auth
+  - parameterized-trigger
+  - plot
+  - plugin-usage-plugin
+  - pmd
+  - port-allocator
+  - postbuild-task
+  - PrioritySorter
+  - publish-over-ssh
+  - rebuild
+  - role-strategy
+  - ruby-runtime
+  - run-condition
+  - saferestart
+  - saml
+  - scm-api
+  - scm-sync-configuration
+  - script-security
+  - sectioned-view
+  - show-build-parameters
+  - simple-theme-plugin
+  - sitemonitor
+  - ssh-agent
+  - ssh-credentials
+  - ssh-slaves
+  - stashNotifier
+#- stash-pullrequest-builder
+  - statusmonitor
+  - subversion
+  - tap
+  - tasks
+  - text-finder
+  - throttle-concurrents
+  - timestamper
+  - token-macro
+  - translation
+  - violations
+  - warnings
+  - windows-slaves
+  - ws-cleanup
+  - xcode-plugin
+  - xunit
+
+jenkins_job_builder_user_name: "{{ ansible_ssh_user }}"
+jenkins_job_builder_user_group: "{{ ansible_ssh_user }}"
+jenkins_job_builder_template_jenkins_jobs_ini_src: "../jjb/jenkins_jobs.ini"
+jenkins_job_builder_file_jobs_src: "../jjb/jobs.yaml"
+jenkins_job_builder_config_jenkins_url: "http://{{ jenkins_hostname }}:{{ jenkins_http_port }}"

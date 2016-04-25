@@ -1,0 +1,45 @@
+- job:
+    name: 'pullrequest-trigger'
+    parameters:
+        - string:
+            name: sourceBranch
+            description: "Branch to build"
+        - string:
+            name: targetBranch
+            description: "Branch to merge against"
+    wrappers:
+        - timestamps
+    scm:
+        - git:
+            url: '{repo_url}'
+            credentials-id: 9d29ba49-6a07-4d5b-8c46-737918eb4e5f
+            refspec: "+refs/pull-requests/*:refs/remotes/origin/pr/* +refs/heads/*:refs/remotes/origin/*"
+            branches:
+                - "*/${{sourceBranch}}"
+            skip-tag: false
+            wipe-workspace: false
+            merge:
+                branch: "${{targetBranch}}"
+                fast-forward-mode: "NO_FF"
+    triggers:
+        - raw:
+            xml: |
+              <stashpullrequestbuilder.stashpullrequestbuilder.StashBuildTrigger plugin="stash-pullrequest-builder@1.3.1">
+                <spec>* * * * *</spec>
+                <cron>* * * * *</cron>
+                <stashHost>https://stash.dev.youview.co.uk/</stashHost>
+                <username>clientappsbuild</username>
+                <password>clientappsbuild</password>
+                <projectCode>fewt</projectCode>
+                <repositoryName>myrepo</repositoryName>
+                <ciSkipPhrases></ciSkipPhrases>
+                <ciBuildPhrases>test this please, Mr Jenkins</ciBuildPhrases>
+                <ignoreSsl>true</ignoreSsl>
+                <checkDestinationCommit>true</checkDestinationCommit>
+                <checkMergeable>false</checkMergeable>
+                <checkNotConflicted>false</checkNotConflicted>
+                <onlyBuildOnComment>false</onlyBuildOnComment>
+                <reportBuildStartedToStash>false</reportBuildStartedToStash>
+                <deleteBuildStartedToStash>false</deleteBuildStartedToStash>
+                <reportBuildStatusToStash>false</reportBuildStatusToStash>
+              </stashpullrequestbuilder.stashpullrequestbuilder.StashBuildTrigger>
